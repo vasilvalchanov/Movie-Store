@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieStore.Services
+namespace MovieStore.DTOs.InputModels
 {
-    public class Class1
+    public class EditMovieBindingModel
     {
     }
 }

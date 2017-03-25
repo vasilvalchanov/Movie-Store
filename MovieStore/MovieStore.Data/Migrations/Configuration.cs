@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MovieStore.Models.Enums;
 using MovieStore.Models.Models;
 
 namespace MovieStore.Data.Migrations
@@ -13,7 +12,8 @@ namespace MovieStore.Data.Migrations
 
     internal sealed class Configuration : DbMigrationsConfiguration<MovieStoreContext>
     {
-        private List<Actor> actors; 
+        private List<Actor> actors;
+        private List<Genre> genres;
 
         public Configuration()
         {
@@ -34,6 +34,11 @@ namespace MovieStore.Data.Migrations
                 this.CreateAdminUser(context, adminEmail, adminUsername, adminFullname, adminPassword, adminRole);
             }
 
+            if (!context.Genres.Any())
+            {
+                this.SeedGenres(context);
+            }
+
             if (!context.Actors.Any())
             {
                 this.SeedActors(context);
@@ -45,23 +50,43 @@ namespace MovieStore.Data.Migrations
             }
         }
 
+        private void SeedGenres(MovieStoreContext context)
+        {
+            this.genres = new List<Genre>()
+            {
+                new Genre() { Name = "Action"},
+                new Genre() { Name = "Adventure"},
+                new Genre() { Name = "Comedy"},
+                new Genre() { Name = "Crime"},
+                new Genre() { Name = "Drama"},
+                new Genre() { Name = "Fantasy"},
+                new Genre() { Name = "Horror"},
+                new Genre() { Name = "Mystery"},
+                new Genre() { Name = "Romance"},
+                new Genre() { Name = "Thriller"}
+            };
+
+            context.Genres.AddRange(genres);
+            context.SaveChanges();
+        }
+
         private void SeedActors(MovieStoreContext context)
         {
             this.actors = new List<Actor>()
             {
-                new Actor() {Name = "Hugh Jackman", IMDBProfile = "http://www.imdb.com/name/nm0413168/"},
-                new Actor() {Name = "Tom Hardy", IMDBProfile = "http://www.imdb.com/name/nm0362766/"},
-                new Actor() {Name = "Jennifer Lawrence", IMDBProfile = "http://www.imdb.com/name/nm2225369/"},
-                new Actor() {Name = "Marion Cotillard", IMDBProfile = "http://www.imdb.com/name/nm0182839/"},
-                new Actor() {Name = "Leonardo DiCaprio", IMDBProfile = "http://www.imdb.com/name/nm0000138/"},
-                new Actor() {Name = "Ryan Reynold", IMDBProfile = "http://www.imdb.com/name/nm0005351/"},
-                new Actor() {Name = "Brad Pitt", IMDBProfile = "http://www.imdb.com/name/nm0000093/"},
-                new Actor() {Name = "Jessica Chastain", IMDBProfile = "http://www.imdb.com/name/nm1567113/"},
-                new Actor() {Name = "Ben Affleck", IMDBProfile = "http://www.imdb.com/name/nm0000255/"},
-                new Actor() {Name = "Alexandra Daddario", IMDBProfile = "http://www.imdb.com/name/nm1275259/"},
-                new Actor() {Name = "Dwayne Johnson", IMDBProfile = "http://www.imdb.com/name/nm0425005/?ref_=tt_ov_st_sm"},
-                new Actor() {Name = "Vin Diesel", IMDBProfile = "http://www.imdb.com/name/nm0004874/?ref_=tt_ov_st_sm"},
-                new Actor() {Name = "Matt Damon", IMDBProfile = "http://www.imdb.com/name/nm0000354/?ref_=tt_ov_st_sm"}
+                new Actor() {Name = "Hugh Jackman", Photo = "http://vignette3.wikia.nocookie.net/marvelmovies/images/3/31/Hugh_Jackman.jpg/revision/latest?cb=20130821201217", IMDBProfile = "http://www.imdb.com/name/nm0413168/"},
+                new Actor() {Name = "Tom Hardy", Photo = "http://static.celebuzz.com/uploads/2011/08/30/Tom-Hardy-5.jpg", IMDBProfile = "http://www.imdb.com/name/nm0362766/"},
+                new Actor() {Name = "Jennifer Lawrence", Photo = "https://s-media-cache-ak0.pinimg.com/originals/2f/2f/ba/2f2fba3617e89c30aa15dd19635b3bba.jpg", IMDBProfile = "http://www.imdb.com/name/nm2225369/"},
+                new Actor() {Name = "Marion Cotillard", Photo = "https://images-na.ssl-images-amazon.com/images/M/MV5BMTQxNTEzNTkwNF5BMl5BanBnXkFtZTcwNzQ2NDIwOQ@@._V1_UX214_CR0,0,214,317_AL_.jpg", IMDBProfile = "http://www.imdb.com/name/nm0182839/"},
+                new Actor() {Name = "Leonardo DiCaprio", Photo = "https://images-na.ssl-images-amazon.com/images/M/MV5BMjI0MTg3MzI0M15BMl5BanBnXkFtZTcwMzQyODU2Mw@@._V1_UY1200_CR130,0,630,1200_AL_.jpg", IMDBProfile = "http://www.imdb.com/name/nm0000138/"},
+                new Actor() {Name = "Ryan Reynolds", Photo = "http://i.huffpost.com/gen/3428322/thumbs/o-RYAN-REYNOLDS-TIFF-900.jpg?6", IMDBProfile = "http://www.imdb.com/name/nm0005351/"},
+                new Actor() {Name = "Brad Pitt", Photo = "https://s-media-cache-ak0.pinimg.com/originals/12/23/ee/1223eef107b46ef6738f477c3e4c2aed.jpg", IMDBProfile = "http://www.imdb.com/name/nm0000093/"},
+                new Actor() {Name = "Jessica Chastain", Photo = "https://pmcdeadline2.files.wordpress.com/2014/07/jessica-chastain.jpg", IMDBProfile = "http://www.imdb.com/name/nm1567113/"},
+                new Actor() {Name = "Ben Affleck", Photo = "http://www.hellomagazine.com/imagenes/profiles/ben-affleck/5805-Ben-Affleck.jpg", IMDBProfile = "http://www.imdb.com/name/nm0000255/"},
+                new Actor() {Name = "Alexandra Daddario", Photo = "http://vignette1.wikia.nocookie.net/baywatch/images/7/7b/AMPLzYs.jpg/revision/latest?cb=20160110032452", IMDBProfile = "http://www.imdb.com/name/nm1275259/"},
+                new Actor() {Name = "Dwayne Johnson", Photo = "https://upload.wikimedia.org/wikipedia/commons/6/6f/Dwayne_Johnson_Hercules_2014_(cropped).jpg", IMDBProfile = "http://www.imdb.com/name/nm0425005/?ref_=tt_ov_st_sm"},
+                new Actor() {Name = "Vin Diesel", Photo = "https://images-na.ssl-images-amazon.com/images/M/MV5BMjExNzA4MDYxN15BMl5BanBnXkFtZTcwOTI1MDAxOQ@@._V1_UY317_CR7,0,214,317_AL_.jpg", IMDBProfile = "http://www.imdb.com/name/nm0004874/?ref_=tt_ov_st_sm"},
+                new Actor() {Name = "Matt Damon", Photo = "https://upload.wikimedia.org/wikipedia/commons/8/82/Damon_cropped.jpg", IMDBProfile = "http://www.imdb.com/name/nm0000354/?ref_=tt_ov_st_sm"}
             };
 
             context.Actors.AddRange(actors);
@@ -83,7 +108,7 @@ namespace MovieStore.Data.Migrations
                     Price = 15.99m,
                     Description = "In 1942, a Canadian intelligence officer in North Africa encounters a female French Resistance fighter on a deadly mission behind enemy lines. When they reunite in London, their relationship is tested by the pressures of war.",
                     Country = "UK, USA",
-                    Genres = new HashSet<Genre>() {Genre.Action, Genre.Drama, Genre.Romance },
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[4], this.genres[8] },
                     Actors = new HashSet<Actor>() {this.actors[3], this.actors[6] }
                 },
                 new Movie()
@@ -97,7 +122,7 @@ namespace MovieStore.Data.Migrations
                     Price = 9.99m,
                     Description = "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
                     Country = "UK, USA",
-                    Genres = new HashSet<Genre>() {Genre.Action, Genre.Adventure, Genre.Thriller, Genre.Mystery },
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[7], this.genres[9] },
                     Actors = new HashSet<Actor>() {this.actors[3], this.actors[1], this.actors[4] }
                 },
                 new Movie()
@@ -111,7 +136,7 @@ namespace MovieStore.Data.Migrations
                     Price = 1m,
                     Description = "Eight years after the Joker's reign of anarchy, the Dark Knight, with the help of the enigmatic Selina, is forced from his imposed exile to save Gotham City, now on the edge of total annihilation, from the brutal guerrilla terrorist Bane.",
                     Country = "UK, USA",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Thriller},
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[9] },
                     Actors = new HashSet<Actor>() {this.actors[3], this.actors[1]}
                 },
                 new Movie()
@@ -125,7 +150,7 @@ namespace MovieStore.Data.Migrations
                     Price = 11.99m,
                     Description = "Daniel Ocean recruits one more team member so he can pull off three major European heists in this sequel to Ocean's 11.",
                     Country = "USA",
-                    Genres = new HashSet<Genre>() {Genre.Crime, Genre.Thriller },
+                    Genres = new HashSet<Genre>() {this.genres[3], this.genres[9] },
                     Actors = new HashSet<Actor>() {this.actors[6], this.actors[12]}
                 },
                 new Movie()
@@ -139,7 +164,7 @@ namespace MovieStore.Data.Migrations
                     Price = 13.99m,
                     Description = "A look at Wolverine's early life, in particular his time with the government squad Team X and the impact it will have on his later years.",
                     Country = "UK, USA",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Adventure, Genre.Thriller, Genre.Fantasy},
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[9], this.genres[5] },
                     Actors = new HashSet<Actor>() {this.actors[0], this.actors[5]}
                 },
                 new Movie()
@@ -153,7 +178,7 @@ namespace MovieStore.Data.Migrations
                     Price = 19.99m,
                     Description = "A fast-talking mercenary with a morbid sense of humor is subjected to a rogue experiment that leaves him with accelerated healing powers and a quest for revenge.",
                     Country = "USA",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Adventure, Genre.Comedy},
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[2]},
                     Actors = new HashSet<Actor>() {this.actors[5]}
                 },
                 new Movie()
@@ -167,7 +192,7 @@ namespace MovieStore.Data.Migrations
                     Price = 14.99m,
                     Description = "An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.",
                     Country = "USA, Hong Kong",
-                    Genres = new HashSet<Genre>() { Genre.Crime, Genre.Drama, Genre.Thriller},
+                    Genres = new HashSet<Genre>() {this.genres[3], this.genres[4], this.genres[9]},
                     Actors = new HashSet<Actor>() {this.actors[4], this.actors[12]}
                 },
                 new Movie()
@@ -181,7 +206,7 @@ namespace MovieStore.Data.Migrations
                     Price = 9.99m,
                     Description = "In the aftermath of a massive earthquake in California, a rescue-chopper pilot makes a dangerous journey with his ex-wife across the state in order to rescue his daughter.",
                     Country = "USA",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Adventure, Genre.Drama, Genre.Thriller},
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[4], this.genres[9] },
                     Actors = new HashSet<Actor>() {this.actors[9], this.actors[10]}
                 },
                 new Movie()
@@ -195,7 +220,7 @@ namespace MovieStore.Data.Migrations
                     Price = 14.99m,
                     Description = "Deckard Shaw seeks revenge against Dominic Toretto and his family for his comatose brother.",
                     Country = "USA, Japan",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Crime, Genre.Thriller},
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[3], this.genres[9]},
                     Actors = new HashSet<Actor>() {this.actors[11], this.actors[10]}
                 },
                 new Movie()
@@ -209,7 +234,7 @@ namespace MovieStore.Data.Migrations
                     Price = 19.99m,
                     Description = "An astronaut becomes stranded on Mars after his team assume him dead, and must rely on his ingenuity to find a way to signal to Earth that he is alive.",
                     Country = "UK, USA",
-                    Genres = new HashSet<Genre>() { Genre.Adventure, Genre.Drama, Genre.Fantasy},
+                    Genres = new HashSet<Genre>() {this.genres[1], this.genres[4], this.genres[5]},
                     Actors = new HashSet<Actor>() {this.actors[12], this.actors[7]}
                 },
                 new Movie()
@@ -223,9 +248,8 @@ namespace MovieStore.Data.Migrations
                     Price = 9.99m,
                     Description = "Will Hunting, a janitor at M.I.T., has a gift for mathematics, but needs help from a psychologist to find direction in his life",
                     Country = "USA",
-                    Genres = new HashSet<Genre>() { Genre.Drama},
+                    Genres = new HashSet<Genre>() { this.genres[4]},
                     Actors = new HashSet<Actor>() {this.actors[8], this.actors[12]}
-                    // matt damon, ben aflek
                 },
                  new Movie()
                 {
@@ -238,8 +262,8 @@ namespace MovieStore.Data.Migrations
                     Price = 12.99m,
                     Description = "The X-Men send Wolverine to the past in a desperate effort to change history and prevent an event that results in doom for both humans and mutants.",
                     Country = "USA, UK, Canada",
-                    Genres = new HashSet<Genre>() { Genre.Action, Genre.Adventure, Genre.Thriller, Genre.Fantasy},
-                    Actors = new HashSet<Actor>() {this.actors[2], this.actors[10]}
+                    Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[9], this.genres[5] },
+                    Actors = new HashSet<Actor>() {this.actors[2], this.actors[0]}
                 }
             };
 

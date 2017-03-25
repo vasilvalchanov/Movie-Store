@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IMovieStoreContext.cs" />
     <Compile Include="Contracts\IMovieStoreData.cs" />
     <Compile Include="Contracts\IRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />

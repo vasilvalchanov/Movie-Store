@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace MovieStore.Models.Models
 {
-    public class Actor
+    public class Genre
     {
         private ICollection<Movie> movies;
 
-        public Actor()
+        public Genre()
         {
             this.movies = new HashSet<Movie>();
         }
@@ -21,12 +21,6 @@ namespace MovieStore.Models.Models
 
         [Required]
         public string Name { get; set; }
-
-        [Required]
-        public string Photo { get; set; }
-
-        [Required]
-        public string IMDBProfile { get; set; }
 
         public virtual ICollection<Movie> Movies
         {

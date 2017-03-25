@@ -22,3 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.actor-photo {
+    height: 220px;
+}
+
+.movie-container {
+    margin-bottom: 35px;
+    padding-top: 10px;
+    border: solid 1px;
+}

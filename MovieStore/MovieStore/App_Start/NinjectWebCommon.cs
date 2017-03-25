@@ -1,5 +1,7 @@
 using MovieStore.Data;
 using MovieStore.Data.Contracts;
+using MovieStore.Services.Contracts;
+using MovieStore.Services.Services;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MovieStore.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(MovieStore.App_Start.NinjectWebCommon), "Stop")]
@@ -65,8 +67,14 @@ namespace MovieStore.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<MovieStoreContext>().To<MovieStoreContext>();
+            kernel.Bind<IActorsService>().To<ActorsService>();
+
+            kernel.Bind<IMovieService>().To<MovieService>();
+
             kernel.Bind<IMovieStoreData>().To<MovieStoreData>();
+
+            kernel.Bind<IMovieStoreContext>().To<MovieStoreContext>();
+
         }        
     }
 }

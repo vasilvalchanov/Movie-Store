@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MovieStore.Models.Enums;
 
 namespace MovieStore.Models.Models
 {
@@ -14,6 +13,7 @@ namespace MovieStore.Models.Models
         private ICollection<User> users;
         private ICollection<Actor> actors;
         private ICollection<Comment> comments;
+        private ICollection<Genre> genres;
 
         public Movie()
         {
@@ -21,7 +21,7 @@ namespace MovieStore.Models.Models
             this.users = new HashSet<User>();
             this.actors = new HashSet<Actor>();
             this.comments = new HashSet<Comment>();
-            this.Genres = new HashSet<Genre>();
+            this.genres = new HashSet<Genre>();
         }
 
         [Key]
@@ -53,7 +53,11 @@ namespace MovieStore.Models.Models
         [Required]
         public string Country { get; set; }
 
-        public ICollection<Genre> Genres { get; set; }
+        public virtual ICollection<Genre> Genres
+        {
+            get { return this.genres; }
+            set { this.genres = value; }
+        }
 
         public virtual ICollection<Rating> Ratings
         {

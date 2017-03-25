@@ -12,11 +12,11 @@ namespace MovieStore.Data
 {
     public class MovieStoreData : IMovieStoreData
     {
-        private readonly DbContext context;
+        private readonly IMovieStoreContext context;
 
         private readonly IDictionary<Type, object> repositories;
 
-        public MovieStoreData(DbContext context)
+        public MovieStoreData(IMovieStoreContext context)
         {
             this.context = context;
             this.repositories = new Dictionary<Type, object>();
@@ -32,9 +32,16 @@ namespace MovieStore.Data
 
         public IRepository<User> Users => this.GetRepository<User>();
 
+        public IRepository<Genre> Genres => this.GetRepository<Genre>();
+
         public int SaveChanges()
         {
             return this.context.SaveChanges();
+        }
+
+        public IMovieStoreContext Context
+        {
+            get { return this.context; }
         }
 
         private IRepository<T> GetRepository<T>() where T : class

@@ -5,18 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieStore.Models.Models
+namespace MovieStore.DTOs.InputModels
 {
-    public class Actor
+    public class EditActorBindingModel
     {
-        private ICollection<Movie> movies;
-
-        public Actor()
-        {
-            this.movies = new HashSet<Movie>();
-        }
-
-        [Key]
+        [Required]
         public int Id { get; set; }
 
         [Required]
@@ -27,11 +20,5 @@ namespace MovieStore.Models.Models
 
         [Required]
         public string IMDBProfile { get; set; }
-
-        public virtual ICollection<Movie> Movies
-        {
-            get { return this.movies; }
-            set { this.movies = value; }
-        }
     }
 }
