@@ -313,6 +313,13 @@ namespace MovieStore.Data.Migrations
                 throw new Exception(string.Join("; ", roleCreateResult.Errors));
             }
 
+            var userRoleCreateResult = roleManager.Create(new IdentityRole("User"));
+
+            if (!userRoleCreateResult.Succeeded)
+            {
+                throw new Exception(string.Join("; ", userRoleCreateResult.Errors));
+            }
+
             // add the admin user to the Administrator role
 
             var addAdminRoleResult = userManager.AddToRole(adminUser.Id, adminRole);

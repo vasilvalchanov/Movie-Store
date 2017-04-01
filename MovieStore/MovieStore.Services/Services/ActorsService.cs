@@ -24,13 +24,6 @@ namespace MovieStore.Services.Services
             this.CheckModelForNull(model);
             this.CheckActorForDuplication(model);
 
-            //var actor = new Actor()
-            //{
-            //    Name = model.Name,
-            //    Photo = model.Photo,
-            //    IMDBProfile = model.IMDBProfile
-            //};
-
             var actor = Mapper.Map<Actor>(model);
 
             this.Data.Actors.Add(actor);

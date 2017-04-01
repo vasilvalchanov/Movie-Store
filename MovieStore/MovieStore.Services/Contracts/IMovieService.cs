@@ -14,6 +14,8 @@ namespace MovieStore.Services.Contracts
 
         List<MovieViewModel> GetMoviesByUserId(int userId);
 
+        IQueryable<GenreViewModel> GetAllMovieGenres(); 
+
         void CreateMovie(CreateMovieBindingModel model);
 
         void EditMovie(EditMovieBindingModel model);

@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MovieStore.Data;
+using MovieStore.DTOs.InputModels;
+using MovieStore.Extensions;
 using MovieStore.Models.Models;
 using MovieStore.Services.Contracts;
 
@@ -17,10 +19,12 @@ namespace MovieStore.Controllers
         private MovieStoreContext db = new MovieStoreContext();
 
         private IMovieService movieService;
+        private IActorsService actorService;
 
-        public MoviesController(IMovieService movieService)
+        public MoviesController(IMovieService movieService, IActorsService actorsService)
         {
             this.movieService = movieService;
+            this.actorService = actorsService;
         }
 
         // GET: Movies
@@ -45,58 +49,120 @@ namespace MovieStore.Controllers
             return View(movie);
         }
 
-        // GET: Movies/Create
+        //MOVE TO SERVICE
         public ActionResult Create()
         {
-            return View();
+            var model = new CreateMovieBindingModel();
+            var actors = this.actorService.GetAllActors().ToList();
+            var genres = this.movieService.GetAllMovieGenres().ToList();
+            var actorItems = actors.Select(actor => new SelectListItem()
+            {
+                Value = actor.Id.ToString(),
+                Text = actor.Name
+            }).ToList();
+
+            var genreItems = genres.Select(genre => new SelectListItem()
+            {
+                Value = genre.Id.ToString(),
+                Text = genre.Name
+            }).ToList();
+
+            MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
+            MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
+
+            model.Actors = actorsList;
+            model.Genres = genreList;
+
+            return View(model);
         }
 
-        // POST: Movies/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Year,DurationInMinutes,Size,Poster,Trailer,Price,Description,Country")] Movie movie)
+        public ActionResult Create(CreateMovieBindingModel model)
         {
-            if (ModelState.IsValid)
+
+            if (this.ModelState.IsValid)
             {
-                db.Movies.Add(movie);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    this.movieService.CreateMovie(model);
+                    this.AddNotification("Created successfully", NotificationType.SUCCESS);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    this.AddNotification(ex.Message, NotificationType.ERROR);
+                    return this.View(model);
+                }
             }
 
-            return View(movie);
+            return this.View(model);
         }
 
-        // GET: Movies/Edit/5
+        // MOve to Service
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+
+            try
             {
-                return HttpNotFound();
+                var movie = this.movieService.GetMovieViewById(id.Value);
+                //var model = new CreateMovieBindingModel();
+                var actors = this.actorService.GetAllActors().ToList();
+                var genres = this.movieService.GetAllMovieGenres().ToList();
+                var selectedActorsIds = new List<string>();
+                var selectedGenresIds = new List<string>();
+                selectedActorsIds.AddRange(movie.Actors.Select(a => a.Id.ToString()));
+                selectedGenresIds.AddRange(movie.Genres.Select(a => a.Id.ToString()));
+                var actorItems = actors.Select(actor => new SelectListItem()
+                {
+                    Value = actor.Id.ToString(),
+                    Text = actor.Name
+                }).ToList();
+
+                var genreItems = genres.Select(genre => new SelectListItem()
+                {
+                    Value = genre.Id.ToString(),
+                    Text = genre.Name
+                }).ToList();
+
+                MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
+                MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
+
+                movie.ActorsSelectList = new MultiSelectList(actorsList, "Value", "Text", selectedActorsIds);
+                movie.GenresSelectList = new MultiSelectList(genreList, "Value", "Text", selectedGenresIds);
+                return this.View(movie);
             }
-            return View(movie);
+            catch (Exception ex)
+            {
+                return HttpNotFound(ex.Message);
+            }
         }
 
-        // POST: Movies/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Year,DurationInMinutes,Size,Poster,Trailer,Price,Description,Country")] Movie movie)
+        public ActionResult Edit(EditMovieBindingModel model)
         {
-            if (ModelState.IsValid)
+
+            if (this.ModelState.IsValid)
             {
-                db.Entry(movie).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    this.movieService.EditMovie(model);
+                    this.AddNotification("Edited successfully", NotificationType.SUCCESS);
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    this.AddNotification(ex.Message, NotificationType.ERROR);
+                    return this.View();
+                }
             }
-            return View(movie);
+
+            return View();
         }
 
         // GET: Movies/Delete/5

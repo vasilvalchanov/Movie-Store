@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MovieStore.DTOs.ViewModels.Manage;
 using MovieStore.Models;
 
 namespace MovieStore.Controllers
