@@ -23,5 +23,9 @@ namespace MovieStore.Services.Contracts
         MovieViewModel GetMovieViewById(int id);
 
         void Delete(int id);
+
+        CreateMovieBindingModel LoadCreateMovieData();
+
+        MovieViewModel LoadEditMovieData(int id);
     }
 }

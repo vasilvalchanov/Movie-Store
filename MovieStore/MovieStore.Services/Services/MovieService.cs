@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using MovieStore.Data.Contracts;
 using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels;
@@ -14,8 +14,11 @@ namespace MovieStore.Services.Services
 {
     public class MovieService : BaseService, IMovieService
     {
-        public MovieService(IMovieStoreData data) : base(data)
+        private IActorsService actorsService;
+
+        public MovieService(IMovieStoreData data, IActorsService actorsService) : base(data)
         {
+            this.actorsService = actorsService;
         }
 
         public List<MovieViewModel> GetAllMovies()
@@ -32,6 +35,63 @@ namespace MovieStore.Services.Services
         public List<MovieViewModel> GetMoviesByUserId(int userId)
         {
             return null;
+        }
+
+        public CreateMovieBindingModel LoadCreateMovieData()
+        {
+            var model = new CreateMovieBindingModel();
+            var actors = this.actorsService.GetAllActors().ToList();
+            var genres = this.GetAllMovieGenres().ToList();
+            var actorItems = actors.Select(actor => new SelectListItem()
+            {
+                Value = actor.Id.ToString(),
+                Text = actor.Name
+            }).ToList();
+
+            var genreItems = genres.Select(genre => new SelectListItem()
+            {
+                Value = genre.Id.ToString(),
+                Text = genre.Name
+            }).ToList();
+
+            MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
+            MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
+
+            model.Actors = actorsList;
+            model.Genres = genreList;
+
+            return model;
+        }
+
+        public MovieViewModel LoadEditMovieData(int id)
+        {
+            var movie = this.GetMovieViewById(id);
+            //var model = new CreateMovieBindingModel();
+            var actors = this.actorsService.GetAllActors().ToList();
+            var genres = this.GetAllMovieGenres().ToList();
+            var selectedActorsIds = new List<string>();
+            var selectedGenresIds = new List<string>();
+            selectedActorsIds.AddRange(movie.Actors.Select(a => a.Id.ToString()));
+            selectedGenresIds.AddRange(movie.Genres.Select(a => a.Id.ToString()));
+            var actorItems = actors.Select(actor => new SelectListItem()
+            {
+                Value = actor.Id.ToString(),
+                Text = actor.Name
+            }).ToList();
+
+            var genreItems = genres.Select(genre => new SelectListItem()
+            {
+                Value = genre.Id.ToString(),
+                Text = genre.Name
+            }).ToList();
+
+            MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
+            MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
+
+            movie.ActorsSelectList = new MultiSelectList(actorsList, "Value", "Text", selectedActorsIds);
+            movie.GenresSelectList = new MultiSelectList(genreList, "Value", "Text", selectedGenresIds);
+
+            return movie;
         }
 
         public MovieViewModel GetMovieViewById(int id)
@@ -98,15 +158,47 @@ namespace MovieStore.Services.Services
             movie.Trailer = model.Trailer;
             movie.Description = model.Description;
             movie.Country = model.Country;
-            movie.Genres = genres;
-            movie.Actors = actors;
+
+            var genresToDelete = new List<Genre>();
+
+            if (genresId.Count() < movie.Genres.Count)
+            {
+                genresToDelete.AddRange(movie.Genres.Where(genre => !genresId.Any(id => id == genre.Id)));
+            }
+            else
+            {
+                movie.Genres = genres;
+            }
+
+            var actorsToDelete = new List<Actor>();
+
+            if (actorsId.Count() < movie.Actors.Count)
+            {
+                actorsToDelete.AddRange(movie.Actors.Where(actor => !actorsId.Any(id => id == actor.Id)));
+            }
+            else
+            {
+                movie.Actors = actors;
+            }
+
+            foreach (var act in actorsToDelete)
+            {
+                movie.Actors.Remove(act);
+            }
+
+            foreach (var genre in genresToDelete)
+            {
+                movie.Genres.Remove(genre);
+            }
 
             this.Data.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var movie = this.GetMovieById(id);
+            this.Data.Movies.Delete(movie);
+            this.Data.SaveChanges();
         }
 
         public IQueryable<GenreViewModel> GetAllMovieGenres()
@@ -152,7 +244,5 @@ namespace MovieStore.Services.Services
                 throw new InvalidOperationException($"There is already movie with name {model.Name} and year ${model.Year}");
             }
         }
-
-
     }
 }

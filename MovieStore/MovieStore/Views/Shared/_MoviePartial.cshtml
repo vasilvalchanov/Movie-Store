@@ -40,7 +40,9 @@
             </h4>
         </div>
     </div>
-    <h4><a href="#">Details &raquo;</a></h4>
+    <h4>
+        @Html.ActionLink("Details", "Details", "Movies", new { id = @Model.Id}, null)&raquo;
+    </h4>
     <h2 class="text-center text-danger">@Html.DisplayName(Model.Name)</h2>
     
 

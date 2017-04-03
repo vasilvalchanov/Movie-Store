@@ -18,7 +18,7 @@ namespace MovieStore.Controllers
     {
         private MovieStoreContext db = new MovieStoreContext();
 
-        private IMovieService movieService;
+        private readonly IMovieService movieService;
         private IActorsService actorService;
 
         public MoviesController(IMovieService movieService, IActorsService actorsService)
@@ -41,39 +41,34 @@ namespace MovieStore.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+
+            try
             {
-                return HttpNotFound();
+                var movie = this.movieService.GetMovieViewById(id.Value);
+                return this.View(movie);
             }
-            return View(movie);
+            catch (Exception ex)
+            {
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return RedirectToAction("Index");
+            }
+            
         }
 
-        //MOVE TO SERVICE
         public ActionResult Create()
         {
-            var model = new CreateMovieBindingModel();
-            var actors = this.actorService.GetAllActors().ToList();
-            var genres = this.movieService.GetAllMovieGenres().ToList();
-            var actorItems = actors.Select(actor => new SelectListItem()
+            try
             {
-                Value = actor.Id.ToString(),
-                Text = actor.Name
-            }).ToList();
-
-            var genreItems = genres.Select(genre => new SelectListItem()
+                var model = this.movieService.LoadCreateMovieData();
+                return View(model);
+            }
+            catch (Exception ex)
             {
-                Value = genre.Id.ToString(),
-                Text = genre.Name
-            }).ToList();
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return RedirectToAction("Index");
+            }
 
-            MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
-            MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
-
-            model.Actors = actorsList;
-            model.Genres = genreList;
-
-            return View(model);
+           
         }
 
         [HttpPost]
@@ -109,31 +104,7 @@ namespace MovieStore.Controllers
 
             try
             {
-                var movie = this.movieService.GetMovieViewById(id.Value);
-                //var model = new CreateMovieBindingModel();
-                var actors = this.actorService.GetAllActors().ToList();
-                var genres = this.movieService.GetAllMovieGenres().ToList();
-                var selectedActorsIds = new List<string>();
-                var selectedGenresIds = new List<string>();
-                selectedActorsIds.AddRange(movie.Actors.Select(a => a.Id.ToString()));
-                selectedGenresIds.AddRange(movie.Genres.Select(a => a.Id.ToString()));
-                var actorItems = actors.Select(actor => new SelectListItem()
-                {
-                    Value = actor.Id.ToString(),
-                    Text = actor.Name
-                }).ToList();
-
-                var genreItems = genres.Select(genre => new SelectListItem()
-                {
-                    Value = genre.Id.ToString(),
-                    Text = genre.Name
-                }).ToList();
-
-                MultiSelectList actorsList = new MultiSelectList(actorItems.OrderBy(i => i.Text), "Value", "Text");
-                MultiSelectList genreList = new MultiSelectList(genreItems.OrderBy(i => i.Text), "Value", "Text");
-
-                movie.ActorsSelectList = new MultiSelectList(actorsList, "Value", "Text", selectedActorsIds);
-                movie.GenresSelectList = new MultiSelectList(genreList, "Value", "Text", selectedGenresIds);
+                var movie = this.movieService.LoadEditMovieData(id.Value);
                 return this.View(movie);
             }
             catch (Exception ex)
@@ -168,16 +139,21 @@ namespace MovieStore.Controllers
         // GET: Movies/Delete/5
         public ActionResult Delete(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+
+            try
             {
-                return HttpNotFound();
+                var movie = this.movieService.GetMovieViewById(id.Value);
+                return this.View(movie);
             }
-            return View(movie);
+            catch (Exception ex)
+            {
+                return HttpNotFound(ex.Message);
+            }
         }
 
         // POST: Movies/Delete/5
@@ -185,10 +161,17 @@ namespace MovieStore.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = db.Movies.Find(id);
-            db.Movies.Remove(movie);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                this.movieService.Delete(id);
+                this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return this.View();
+            }
         }
 
         protected override void Dispose(bool disposing)

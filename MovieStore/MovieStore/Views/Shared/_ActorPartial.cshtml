@@ -1,7 +1,7 @@
 ﻿@model MovieStore.DTOs.ViewModels.ActorViewModel
 
 
-<div class="col-md-4 movie-container">
+
 
     <div class="row">
         <img class="actor-photo col-md-6" src="@Model.Photo" alt="photo" />
@@ -9,12 +9,12 @@
             <div><strong>Movies:</strong></div>
             @foreach (var movie in Model.Movies)
             {
-                <div>@Html.ActionLink(movie.Name, "movieInMovieContr", "Movies")</div>
+                <div>@Html.ActionLink(movie.Name, "Details", "Movies", new {id = movie.Id}, null)</div>
             }
         </div>
     </div>
     <h2 class="text-center">@Html.DisplayName(Model.Name)</h2>
     <h4 class="text-center"><a href="@Model.IMDBProfile">IMDB Profile &raquo;</a></h4>
 
-</div>
+
 
