@@ -1,0 +1,14 @@
+﻿@model MovieStore.DTOs.ViewModels.MovieWithCommentsViewModel
+
+<h1 class="text-center">@Model.MovieName</h1>
+
+@Html.Partial("_CreateCommentPartial")
+<hr>
+@foreach (var comment in @Model.Comments)
+{
+    @Html.Partial("_CommentPartial", comment)
+}
+
+
+
+

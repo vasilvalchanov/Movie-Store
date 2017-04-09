@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels;
+using MovieStore.Models.Models;
 
 namespace MovieStore.Services.Contracts
 {
@@ -12,7 +13,7 @@ namespace MovieStore.Services.Contracts
     {
         List<MovieViewModel> GetAllMovies();
 
-        List<MovieViewModel> GetMoviesByUserId(int userId);
+        List<MovieViewModel> GetMoviesByUserId(string userId);
 
         IQueryable<GenreViewModel> GetAllMovieGenres(); 
 
@@ -27,5 +28,13 @@ namespace MovieStore.Services.Contracts
         CreateMovieBindingModel LoadCreateMovieData();
 
         MovieViewModel LoadEditMovieData(int id);
+
+        void RateMovie(int id, RateMovieInputModel model, string currentUserId);
+
+        bool HasBeenMovieAlreadyRated(int movieId, string currentUserId);
+
+        void BuyMovie(int id, string currentUserId);
+
+        bool HasBeenMovieAlreadyBought(int id, string currentUserId);
     }
 }

@@ -36,3 +36,14 @@ textarea {
 .head-style {
     margin-bottom: 20px !important;
 }
+
+#comment {
+    border: solid;
+    border-radius: 10px;
+    margin-top: 10px;      
+}
+
+.comment-data {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}

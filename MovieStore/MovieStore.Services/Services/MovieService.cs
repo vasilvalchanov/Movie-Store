@@ -14,7 +14,7 @@ namespace MovieStore.Services.Services
 {
     public class MovieService : BaseService, IMovieService
     {
-        private IActorsService actorsService;
+        private readonly IActorsService actorsService;
 
         public MovieService(IMovieStoreData data, IActorsService actorsService) : base(data)
         {
@@ -32,9 +32,16 @@ namespace MovieStore.Services.Services
             return movies;
         }
 
-        public List<MovieViewModel> GetMoviesByUserId(int userId)
+        public List<MovieViewModel> GetMoviesByUserId(string userId)
         {
-            return null;
+            var movies = this.Data.Movies.All()
+                .Include(m => m.Actors)
+                .Include(m => m.Ratings)
+                .Include(m => m.Genres)
+                .Where(m => m.Users.Any(u => u.Id == userId))
+                .Select(MovieViewModel.Create).ToList();
+
+            return movies;
         }
 
         public CreateMovieBindingModel LoadCreateMovieData()
@@ -207,6 +214,48 @@ namespace MovieStore.Services.Services
                 .Select(GenreViewModel.Create);
 
             return genres;
+        }
+
+        public bool HasBeenMovieAlreadyRated(int movieId, string currentUserId)
+        {
+            var movie = this.GetMovieById(movieId);
+            var hasBeenRated = movie.Ratings.FirstOrDefault(r => r.UserId == currentUserId) != null;
+            return hasBeenRated;
+        }
+
+        public void RateMovie(int id, RateMovieInputModel model, string currentUserId)
+        {
+            this.CheckModelForNull(model);
+
+            var movie = this.GetMovieById(id);
+
+            var rating = new Rating
+            {
+                MovieId = movie.Id,
+                UserId = currentUserId,
+                Stars = model.Stars
+            };
+
+            this.Data.Ratings.Add(rating);
+
+            this.Data.SaveChanges();
+        }
+
+        public bool HasBeenMovieAlreadyBought(int id, string currentUserId)
+        {
+            var movie = this.GetMovieById(id);
+            var hasBeenRated = movie.Users.FirstOrDefault(m => m.Id == currentUserId) != null;
+            return hasBeenRated;
+        }
+
+        public void BuyMovie(int id, string currentUserId)
+        {
+            var movie = this.GetMovieById(id);
+            var user = this.Data.Users.All()
+                .FirstOrDefault(u => u.Id == currentUserId);
+
+            movie.Users.Add(user);
+            this.Data.SaveChanges();
         }
 
         private Movie GetMovieById(int id)

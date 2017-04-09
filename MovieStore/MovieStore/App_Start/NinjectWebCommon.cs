@@ -69,6 +69,8 @@ namespace MovieStore.App_Start
         {
             kernel.Bind<IActorsService>().To<ActorsService>();
 
+            kernel.Bind<ICommentsService>().To<CommentsService>();
+
             kernel.Bind<IMovieService>().To<MovieService>();
 
             kernel.Bind<IMovieStoreData>().To<MovieStoreData>();

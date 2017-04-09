@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using MovieStore.Data;
 using MovieStore.DTOs.InputModels;
 using MovieStore.Extensions;
@@ -14,23 +15,26 @@ using MovieStore.Services.Contracts;
 
 namespace MovieStore.Controllers
 {
-    public class MoviesController : Controller
+    public class MoviesController : BaseController
     {
-        private MovieStoreContext db = new MovieStoreContext();
 
         private readonly IMovieService movieService;
-        private IActorsService actorService;
 
-        public MoviesController(IMovieService movieService, IActorsService actorsService)
+        public MoviesController(IMovieService movieService)
         {
             this.movieService = movieService;
-            this.actorService = actorsService;
         }
 
         // GET: Movies
         public ActionResult Index()
         {
             var movies = this.movieService.GetAllMovies();
+            return this.View(movies);
+        }
+
+        public ActionResult MyMovies()
+        {
+            var movies = this.movieService.GetMoviesByUserId(this.LoggedInUserId);
             return this.View(movies);
         }
 
@@ -44,6 +48,10 @@ namespace MovieStore.Controllers
 
             try
             {
+                this.ViewBag.hasBeenRated = this.movieService.HasBeenMovieAlreadyRated(id.Value,
+                    this.LoggedInUserId);
+                this.ViewBag.hasBeenBought = this.movieService.HasBeenMovieAlreadyBought(id.Value,
+                    this.LoggedInUserId);
                 var movie = this.movieService.GetMovieViewById(id.Value);
                 return this.View(movie);
             }
@@ -55,6 +63,7 @@ namespace MovieStore.Controllers
             
         }
 
+        [HttpGet]
         public ActionResult Create()
         {
             try
@@ -94,7 +103,7 @@ namespace MovieStore.Controllers
             return this.View(model);
         }
 
-        // MOve to Service
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -174,13 +183,44 @@ namespace MovieStore.Controllers
             }
         }
 
-        protected override void Dispose(bool disposing)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Rate(RateMovieInputModel model)
         {
-            if (disposing)
+            if (this.ModelState.IsValid)
             {
-                db.Dispose();
+                try
+                {
+                    this.movieService.RateMovie(model.Id, model, this.LoggedInUserId);
+                    this.AddNotification("Movie was rated successfully", NotificationType.SUCCESS);
+                    return RedirectToAction("Details", new {id = model.Id});
+                }
+                catch (Exception ex)
+                {
+                    this.AddNotification(ex.Message, NotificationType.ERROR);
+                    return this.RedirectToAction("Details", new { id = model.Id });
+                }
             }
-            base.Dispose(disposing);
+
+            return this.RedirectToAction("Details", new {id = model.Id});
         }
+
+        [HttpGet]
+        public ActionResult BuyMovie(int id)
+        {
+            try
+            {
+                
+                this.movieService.BuyMovie(id, this.LoggedInUserId);
+                this.AddNotification("Movie was bought successfully", NotificationType.SUCCESS);
+                return this.RedirectToAction("Details", new { id = id });
+            }
+            catch (Exception ex)
+            {
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return this.RedirectToAction("Details", new { id = id });
+            }
+        }
+        
     }
 }

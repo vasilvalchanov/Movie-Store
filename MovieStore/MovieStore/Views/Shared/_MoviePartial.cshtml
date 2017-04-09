@@ -19,7 +19,8 @@
                 @{
                     if (Model.Rating != null)
                     {
-                        Html.DisplayFor(m => Model.Rating.Value);
+                        //Html.DisplayFor(m => Model.Rating.Value);
+                        @: @Model.Rating.Value
                     }
                     else
                     {

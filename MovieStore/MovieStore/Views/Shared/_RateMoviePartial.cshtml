@@ -1,0 +1,36 @@
+﻿@model Int32
+<div>
+    @using (Html.BeginForm("Rate", "Movies", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal col-md-10 col-md-offset-1">
+            <div class="form-group">
+                <div class="col-md-8">
+                    <input type="hidden" name="id" value="@Model"/>
+                    <select class="form-control" name="stars">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" value="Rate" class="btn btn-info" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
