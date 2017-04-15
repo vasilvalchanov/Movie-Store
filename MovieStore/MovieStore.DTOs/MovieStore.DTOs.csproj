@@ -101,6 +101,7 @@
     <Compile Include="InputModels\CreateActorBindingModel.cs" />
     <Compile Include="InputModels\CreateCommentInputModel.cs" />
     <Compile Include="InputModels\CreateMovieBindingModel.cs" />
+    <Compile Include="InputModels\DeleteMovieCommentInputModel.cs" />
     <Compile Include="InputModels\EditActorBindingModel.cs" />
     <Compile Include="InputModels\EditMovieBindingModel.cs" />
     <Compile Include="InputModels\RateMovieInputModel.cs" />

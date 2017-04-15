@@ -29,7 +29,7 @@ namespace MovieStore.DTOs.ViewModels
 
         public double? Rating { get; set; }
 
-        public int? Comments { get; set; }
+        public int Comments { get; set; }
 
         public IEnumerable<GenreViewModel> Genres { get; set; }
 

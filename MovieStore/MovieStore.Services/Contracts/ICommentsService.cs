@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels;
+using MovieStore.Models.Models;
 
 namespace MovieStore.Services.Contracts
 {
@@ -15,5 +16,7 @@ namespace MovieStore.Services.Contracts
         CommentViewModel CommentMovie(CreateCommentInputModel model, string loggedInUserId);
 
         void DeleteComment(int id, string loggedInUserId, bool isLoggedInUserAdmin);
+
+        CommentViewModel GetCommentById(int id);
     }
 }

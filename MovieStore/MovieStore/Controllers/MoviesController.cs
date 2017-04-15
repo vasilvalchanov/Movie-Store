@@ -15,6 +15,7 @@ using MovieStore.Services.Contracts;
 
 namespace MovieStore.Controllers
 {
+    [Authorize]
     public class MoviesController : BaseController
     {
 
@@ -63,125 +64,124 @@ namespace MovieStore.Controllers
             
         }
 
-        [HttpGet]
-        public ActionResult Create()
-        {
-            try
-            {
-                var model = this.movieService.LoadCreateMovieData();
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                this.AddNotification(ex.Message, NotificationType.ERROR);
-                return RedirectToAction("Index");
-            }
-
+        //[HttpGet]
+        //public ActionResult Create()
+        //{
+        //    try
+        //    {
+        //        var model = this.movieService.LoadCreateMovieData();
+        //        return View(model);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        this.AddNotification(ex.Message, NotificationType.ERROR);
+        //        return RedirectToAction("Index");
+        //    }
            
-        }
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateMovieBindingModel model)
-        {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(CreateMovieBindingModel model)
+        //{
 
-            if (this.ModelState.IsValid)
-            {
-                try
-                {
-                    this.movieService.CreateMovie(model);
-                    this.AddNotification("Created successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    this.AddNotification(ex.Message, NotificationType.ERROR);
-                    return this.View(model);
-                }
-            }
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            this.movieService.CreateMovie(model);
+        //            this.AddNotification("Created successfully", NotificationType.SUCCESS);
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            this.AddNotification(ex.Message, NotificationType.ERROR);
+        //            return this.View(model);
+        //        }
+        //    }
 
-            return this.View(model);
-        }
+        //    return this.View(model);
+        //}
 
-        [HttpGet]
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+        //[HttpGet]
+        //public ActionResult Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
 
-            try
-            {
-                var movie = this.movieService.LoadEditMovieData(id.Value);
-                return this.View(movie);
-            }
-            catch (Exception ex)
-            {
-                return HttpNotFound(ex.Message);
-            }
-        }
+        //    try
+        //    {
+        //        var movie = this.movieService.LoadEditMovieData(id.Value);
+        //        return this.View(movie);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HttpNotFound(ex.Message);
+        //    }
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditMovieBindingModel model)
-        {
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(EditMovieBindingModel model)
+        //{
 
-            if (this.ModelState.IsValid)
-            {
-                try
-                {
-                    this.movieService.EditMovie(model);
-                    this.AddNotification("Edited successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    this.AddNotification(ex.Message, NotificationType.ERROR);
-                    return this.View();
-                }
-            }
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            this.movieService.EditMovie(model);
+        //            this.AddNotification("Edited successfully", NotificationType.SUCCESS);
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            this.AddNotification(ex.Message, NotificationType.ERROR);
+        //            return this.View();
+        //        }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        // GET: Movies/Delete/5
-        public ActionResult Delete(int? id)
-        {
+        //// GET: Movies/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
 
-            try
-            {
-                var movie = this.movieService.GetMovieViewById(id.Value);
-                return this.View(movie);
-            }
-            catch (Exception ex)
-            {
-                return HttpNotFound(ex.Message);
-            }
-        }
+        //    try
+        //    {
+        //        var movie = this.movieService.GetMovieViewById(id.Value);
+        //        return this.View(movie);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HttpNotFound(ex.Message);
+        //    }
+        //}
 
-        // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            try
-            {
-                this.movieService.Delete(id);
-                this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                this.AddNotification(ex.Message, NotificationType.ERROR);
-                return this.View();
-            }
-        }
+        //// POST: Movies/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    try
+        //    {
+        //        this.movieService.Delete(id);
+        //        this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        this.AddNotification(ex.Message, NotificationType.ERROR);
+        //        return this.View();
+        //    }
+        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -244,12 +244,17 @@ namespace MovieStore.Services.Services
         public bool HasBeenMovieAlreadyBought(int id, string currentUserId)
         {
             var movie = this.GetMovieById(id);
-            var hasBeenRated = movie.Users.FirstOrDefault(m => m.Id == currentUserId) != null;
-            return hasBeenRated;
+            var hasBeenAlreadyBought = movie.Users.FirstOrDefault(m => m.Id == currentUserId) != null;
+            return hasBeenAlreadyBought;
         }
 
         public void BuyMovie(int id, string currentUserId)
         {
+            if (this.HasBeenMovieAlreadyBought(id, currentUserId))
+            {
+                throw new InvalidOperationException("You already own this movie");
+            }
+
             var movie = this.GetMovieById(id);
             var user = this.Data.Users.All()
                 .FirstOrDefault(u => u.Id == currentUserId);

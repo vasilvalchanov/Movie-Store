@@ -32,7 +32,9 @@ namespace MovieStore.Services.Services
                 throw new ArgumentNullException("There is not movie with such id");
             }
 
-            var comments = movie.Comments.AsQueryable().Select(CommentViewModel.Create);
+            var comments = movie.Comments.AsQueryable()
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(CommentViewModel.Create);
             movieWithComments.Id = movieId;
             movieWithComments.MovieName = movie.Name;
             movieWithComments.Comments = comments;
@@ -83,6 +85,21 @@ namespace MovieStore.Services.Services
             {
                 throw new InvalidOperationException("You can delete only comments created by you");
             }
+        }
+
+        public CommentViewModel GetCommentById(int id)
+        {
+            var comment = this.Data.Comments.All()
+                .Where(c => c.Id == id)
+                .Select(CommentViewModel.Create)
+                .FirstOrDefault();
+
+            if (comment == null)
+            {
+                throw new ArgumentException("There is not comment with such id");
+            }
+
+            return comment;
         }
 
     }

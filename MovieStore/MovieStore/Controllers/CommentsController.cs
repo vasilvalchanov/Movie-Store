@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MovieStore.Data;
+using MovieStore.DTOs.InputModels;
+using MovieStore.DTOs.ViewModels;
+using MovieStore.Extensions;
 using MovieStore.Models.Models;
 using MovieStore.Services.Contracts;
 
@@ -30,106 +33,64 @@ namespace MovieStore.Controllers
             return View(comments);
         }
 
-        //// GET: Comments/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Comment comment = db.Comments.Find(id);
-        //    if (comment == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(comment);
-        //}
 
-        // GET: Comments/Create
         public ActionResult Create()
-        {
-           
+        {         
             return View();
         }
 
-        // POST: Comments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Content,CreatedAt,MovieId,AuthorId")] Comment comment)
+        public ActionResult Create(CreateCommentInputModel model)
         {
-            return View();
+            if (this.ModelState.IsValid)
+            {
+                try
+                {
+                    var comment = commentsService.CommentMovie(model, this.LoggedInUserId);
+                    return PartialView("_CommentPartial", comment);
+                }
+                catch (Exception ex)
+                {
+                    this.AddNotification(ex.Message, NotificationType.ERROR);
+                    return PartialView("_CreateCommentPartial", model.MovieId);
+                }
+            }
+
+            return PartialView("_CreateCommentPartial", model.MovieId);
         }
 
-        //// GET: Comments/Edit/5
-        //public ActionResult Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Comment comment = db.Comments.Find(id);
-        //    if (comment == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    ViewBag.AuthorId = new SelectList(db.Users, "Id", "Fullname", comment.AuthorId);
-        //    ViewBag.MovieId = new SelectList(db.Movies, "Id", "Name", comment.MovieId);
-        //    return View(comment);
-        //}
 
-        //// POST: Comments/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "Id,Content,CreatedAt,MovieId,AuthorId")] Comment comment)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(comment).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    ViewBag.AuthorId = new SelectList(db.Users, "Id", "Fullname", comment.AuthorId);
-        //    ViewBag.MovieId = new SelectList(db.Movies, "Id", "Name", comment.MovieId);
-        //    return View(comment);
-        //}
+        public ActionResult Delete(CommentViewModel model)
+        {
+            try
+            {
+                var comment = this.commentsService.GetCommentById(model.Id);
+                return this.View(comment);
+            }
+            catch (Exception ex)
+            {
+                return HttpNotFound(ex.Message);
+            }
+        }
 
-        //// GET: Comments/Delete/5
-        //public ActionResult Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Comment comment = db.Comments.Find(id);
-        //    if (comment == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(comment);
-        //}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(CommentViewModel model)
+        {
 
-        //// POST: Comments/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    Comment comment = db.Comments.Find(id);
-        //    db.Comments.Remove(comment);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+            try
+            {
+                this.commentsService.DeleteComment(model.Id, this.LoggedInUserId, this.IsLoggedInUserAdmin);
+                this.AddNotification("Comment deleted successfully", NotificationType.SUCCESS);
+                return this.RedirectToAction("MovieComments", new { id = model.MovieId});
+            }
+            catch (Exception ex)
+            {
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return this.RedirectToAction("MovieComments", new { id = model.MovieId });
+            }        
+        }
 
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
     }
 }

@@ -1,9 +1,15 @@
-﻿@model MovieStore.DTOs.ViewModels.MovieWithCommentsViewModel
+﻿<script src="~/Scripts/jquery-3.1.1.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+
+@model MovieStore.DTOs.ViewModels.MovieWithCommentsViewModel
 
 <h1 class="text-center">@Model.MovieName</h1>
 
-@Html.Partial("_CreateCommentPartial")
+@Html.Partial("_CreateCommentPartial", @Model.Id)
 <hr>
+
+<div id="newComment"></div>
+
 @foreach (var comment in @Model.Comments)
 {
     @Html.Partial("_CommentPartial", comment)

@@ -16,6 +16,8 @@ namespace MovieStore.DTOs.ViewModels
 
         public string Content { get; set; }
 
+        public int MovieId { get; set; }
+
         public string UserId { get; set; }
 
         public string User { get; set; }
@@ -30,7 +32,8 @@ namespace MovieStore.DTOs.ViewModels
                     CreatedAt = comment.CreatedAt,
                     UserId = comment.AuthorId,
                     User = comment.Author.Fullname,
-                    Content = comment.Content
+                    Content = comment.Content,
+                    MovieId = comment.MovieId
                 };
             }
         } 

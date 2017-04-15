@@ -1,54 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using MovieStore.Data;
+using MovieStore.Controllers;
 using MovieStore.DTOs.InputModels;
 using MovieStore.Extensions;
-using MovieStore.Models.Models;
 using MovieStore.Services.Contracts;
 
-namespace MovieStore.Controllers
+namespace MovieStore.Areas.Administration.Controllers
 {
-    public class ActorsController : Controller
+    [Authorize(Roles = "Administrator")]
+    [RouteArea("Administration")]
+    public class AdminMoviesController : BaseController
     {
-        private MovieStoreContext db = new MovieStoreContext();
+        private readonly IMovieService movieService;
 
-        private readonly IActorsService actorsService;
-
-        public ActorsController(IActorsService actorService)
+        public AdminMoviesController(IMovieService movieService)
         {
-            this.actorsService = actorService;
+            this.movieService = movieService;
         }
 
-        // GET: Actors
-        public ActionResult Index()
-        {
-            var actors = this.actorsService.GetAllActors();
-            return this.View(actors);
-        }
-
-        // GET: Actors/Create
+        [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            try
+            {
+                var model = this.movieService.LoadCreateMovieData();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                this.AddNotification(ex.Message, NotificationType.ERROR);
+                return RedirectToAction("Index", "Movies", new { Area = "" });
+            }
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateActorBindingModel model)
+        public ActionResult Create(CreateMovieBindingModel model)
         {
+
             if (this.ModelState.IsValid)
             {
                 try
                 {
-                    this.actorsService.CreateActor(model);
+                    this.movieService.CreateMovie(model);
                     this.AddNotification("Created successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Movies", new { Area = "" });
                 }
                 catch (Exception ex)
                 {
@@ -60,10 +61,10 @@ namespace MovieStore.Controllers
             return this.View(model);
         }
 
-        // GET: Actors/Edit/5
+        [HttpGet]
+        [Route("{id}")]
         public ActionResult Edit(int? id)
         {
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -71,8 +72,8 @@ namespace MovieStore.Controllers
 
             try
             {
-                var actor = this.actorsService.GetActorViewById(id.Value);
-                return this.View(actor);
+                var movie = this.movieService.LoadEditMovieData(id.Value);
+                return this.View(movie);
             }
             catch (Exception ex)
             {
@@ -82,15 +83,16 @@ namespace MovieStore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditActorBindingModel model)
+        public ActionResult Edit(EditMovieBindingModel model)
         {
+
             if (this.ModelState.IsValid)
             {
                 try
                 {
-                    this.actorsService.EditActor(model);
+                    this.movieService.EditMovie(model);
                     this.AddNotification("Edited successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Movies", new {Area = ""});
                 }
                 catch (Exception ex)
                 {
@@ -102,7 +104,7 @@ namespace MovieStore.Controllers
             return View();
         }
 
-        // GET: Actors/Delete/5
+
         public ActionResult Delete(int? id)
         {
 
@@ -113,33 +115,30 @@ namespace MovieStore.Controllers
 
             try
             {
-                var actor = this.actorsService.GetActorViewById(id.Value);
-                return this.View(actor);
+                var movie = this.movieService.GetMovieViewById(id.Value);
+                return this.View(movie);
             }
             catch (Exception ex)
             {
                 return HttpNotFound(ex.Message);
             }
-
         }
 
-        // POST: Actors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-                this.actorsService.Delete(id);
+                this.movieService.Delete(id);
                 this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Movies", new { Area = "" });
             }
             catch (Exception ex)
             {
                 this.AddNotification(ex.Message, NotificationType.ERROR);
                 return this.View();
             }
-
         }
     }
 }

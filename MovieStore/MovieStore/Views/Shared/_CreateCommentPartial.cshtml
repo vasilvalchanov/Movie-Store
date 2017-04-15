@@ -1,28 +1,41 @@
-﻿<div class="row">
-    @using (Html.BeginForm("Create", "Comments", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-    {
-        
-            <div class="row col-md-6 col-md-offset-3">
-                <div class="col-md-10">
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <div class="col-md-8">
-                            @Html.TextArea("content", null, new { rows = "4", @class = "form-control" })
-                            @Html.ValidationMessage("content", new { @class = "text-danger" })
+﻿@model Int32
 
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-info" type="submit">Comment</button>
-                        </div>
+
+<div class="row">
+    @using (Ajax.BeginForm("Create", "Comments", new AjaxOptions() {HttpMethod = "POST", UpdateTargetId = "newComment", InsertionMode = InsertionMode.InsertBefore, OnSuccess = "resetField"}, new { @class = "form-horizontal", role = "form" }))
+    {
+
+        <div class="row col-md-6 col-md-offset-3">
+            <div class="col-md-10">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <input type="hidden" name="movieId" value="@Model">
+                        @Html.TextArea("content", null, new {rows = "4", @class = "form-control", id="comment-content"})
+                        @Html.ValidationMessage("content", new {@class = "text-danger"})
+
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-info" type="submit">Comment</button>
                     </div>
                 </div>
-
             </div>
-        
+
+        </div>
+
     }
 </div>
+
+
 
 @section scripts{
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script type="text/javascript"> 
+    function resetField() {
+        var element = document.getElementById('comment-content');
+        element.value = null;
+    }
+</script>
