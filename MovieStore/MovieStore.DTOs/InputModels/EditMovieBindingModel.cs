@@ -35,10 +35,11 @@ namespace MovieStore.DTOs.InputModels
         public string Trailer { get; set; }
 
         [Required]
-        [Range(0.01, double.MaxValue)]
+        [Range(0.01, 1000000)]
         public decimal Price { get; set; }
 
         [Required]
+        [MinLength(20, ErrorMessage = "The description must be at least 20 symbols")]
         public string Description { get; set; }
 
         [Required]

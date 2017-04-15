@@ -1,7 +1,7 @@
 ﻿@model MovieStore.DTOs.ViewModels.MovieViewModel
 
 
-<div class="col-md-6 movie-container">
+@*<div class="col-md-6 movie-container">*@
 
     <div class="row">
         <img class="actor-photo col-md-4" src="@Model.Poster" alt="poster"/>
@@ -40,11 +40,30 @@
             </h4>
         </div>
     </div>
-    <h4>
-        @Html.ActionLink("Details", "Details", "Movies", new { id = @Model.Id}, null)&raquo;
-    </h4>
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Administrator"))
+    {
+        if (this.ViewBag.ActionName == "Delete")
+        {
+            <h3>@Html.ActionLink("Details", "Details", "Movies", new { Area = "", id = @Model.Id }, null)&raquo;</h3>
+        }
+        else
+        {
+            <div class="row">
+                <h3 class="col-md-5">@Html.ActionLink("Details", "Details", "Movies", new { Area = "", id = @Model.Id }, null)&raquo;</h3>
+
+                @Html.ActionLink("Edit", "Edit", "AdminMovies", new { Area = "Administration", id = Model.Id }, htmlAttributes: new { @class = "btn btn-info col-md-3", id = "actor-btn" })
+                @Html.ActionLink("Delete", "Delete", "AdminMovies", new { Area = "Administration", id = Model.Id }, htmlAttributes: new { @class = "btn btn-info col-md-3" })
+
+            </div>
+        }
+
+    }
+    else
+    {
+        <h3>@Html.ActionLink("Details", "Details", "Movies", new { id = @Model.Id }, null)&raquo;</h3>
+    }
     <h2 class="text-center text-danger">@Html.DisplayName(Model.Name)</h2>
     
 
-</div>
+@*</div>*@
 

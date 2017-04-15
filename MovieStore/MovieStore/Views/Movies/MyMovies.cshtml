@@ -16,7 +16,9 @@
         @:</div>
     }
 
-    @Html.Partial("_MoviePartial", Model[i])
+    <div class="col-md-6 movie-container">
+        @Html.Partial("_MoviePartial", Model[i])
+    </div>
 
 }
 

@@ -23,10 +23,27 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Actors", "Index", "Actors")</li>
-                    <li>@Html.ActionLink("Movie Store", "Index", "Movies")</li>
-                    <li>@Html.ActionLink("My Movies", "MyMovies", "Movies")</li>
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        if (this.User.IsInRole("Administrator"))
+                        {
+                            <li class="dropdown">
+                                <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" id="admin-button">
+                                    Administration
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Create Movie", "Create", "AdminMovies", new { Area = "Administration" }, null)</li>
+                                    <li>@Html.ActionLink("Create Actor", "Create", "AdminActors", new { Area = "Administration" }, null)</li>
+                                </ul>
+                            </li>
+                        }
+
+                        <li>@Html.ActionLink("Actors", "Index", "Actors", new { Area = "" }, null)</li>
+                        <li>@Html.ActionLink("Movie Store", "Index", "Movies", new { Area = "" }, null)</li>
+                        <li>@Html.ActionLink("My Movies", "MyMovies", "Movies", new { Area = "" }, null)</li>
+                    }
+                    
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

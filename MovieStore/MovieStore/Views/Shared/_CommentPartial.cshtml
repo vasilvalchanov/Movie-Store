@@ -1,8 +1,16 @@
-﻿@model MovieStore.DTOs.ViewModels.CommentViewModel
+﻿@using Microsoft.AspNet.Identity
+@model MovieStore.DTOs.ViewModels.CommentViewModel
 
 <div class="row col-md-6 col-md-offset-3" id="comment">
+    @if (@Model.UserId == this.User.Identity.GetUserId() || this.User.IsInRole("Administrator"))
+    {
+        if (this.ViewBag.ActionName != "Delete")
+        {
+            <span>@Html.ActionLink("`", "Delete", "Comments", @Model, new { @class = "glyphicon glyphicon-remove pull-right", id = "delete-sign" })</span>
+        }
 
-    <span>@Html.ActionLink(".", "Delete", "Comments", @Model, new {@class= "glyphicon glyphicon-remove pull-right" })</span>
+    }
+    
     
     <h3 class="text-center text-danger">@Html.DisplayFor(model => model.Content)</h3>
     <div>

@@ -65,6 +65,8 @@ namespace MovieStore.Controllers
         {
             try
             {
+                string actionName = ControllerContext.RouteData.Values["Action"].ToString();
+                this.ViewBag.ActionName = actionName;
                 var comment = this.commentsService.GetCommentById(model.Id);
                 return this.View(comment);
             }

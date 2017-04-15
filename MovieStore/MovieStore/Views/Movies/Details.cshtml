@@ -120,8 +120,7 @@
 
 
 <div class="row col-md-8 col-md-offset-2">
-    <div class="col-md-2 pull-left">
-        
+    <div class="col-md-3 pull-left">       
         @Html.ActionLink("Movie Store", "Index", null, htmlAttributes: new { @class = "btn btn-info" })
     </div>
     <div class="col-md-6">
@@ -130,11 +129,10 @@
             @Html.Partial("_RateMoviePartial", @Model.Id)
         }
     </div>
-    <div class="col-md-4">          
-        @Html.ActionLink("Edit", "Edit","AdminMovies", new {Area ="Administration", id = Model.Id }, htmlAttributes: new { @class = "btn btn-info col-md-4" })
+    <div class="col-md-3">          
         @if (!this.ViewBag.hasBeenBought)
         {
-            @Html.ActionLink("Buy", "BuyMovie", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-danger col-md-5 col-md-offset-2" })
+            @Html.ActionLink("Buy", "BuyMovie", new { id = Model.Id }, htmlAttributes: new { @class = "btn btn-danger col-md-8" })
         }
         
     </div>

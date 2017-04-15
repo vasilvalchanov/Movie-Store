@@ -261,7 +261,7 @@ namespace MovieStore.Data.Migrations
                     Trailer = "pK2zYHWDZKo",
                     Price = 12.99m,
                     Description = "The X-Men send Wolverine to the past in a desperate effort to change history and prevent an event that results in doom for both humans and mutants.",
-                    Country = "USA, UK, Canada",
+                    Country = "USA, UK",
                     Genres = new HashSet<Genre>() {this.genres[0], this.genres[1], this.genres[9], this.genres[5] },
                     Actors = new HashSet<Actor>() {this.actors[2], this.actors[0]}
                 }

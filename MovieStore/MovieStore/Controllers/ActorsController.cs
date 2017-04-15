@@ -16,7 +16,6 @@ namespace MovieStore.Controllers
 {
     public class ActorsController : Controller
     {
-        private MovieStoreContext db = new MovieStoreContext();
 
         private readonly IActorsService actorsService;
 
@@ -32,114 +31,114 @@ namespace MovieStore.Controllers
             return this.View(actors);
         }
 
-        // GET: Actors/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //// GET: Actors/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateActorBindingModel model)
-        {
-            if (this.ModelState.IsValid)
-            {
-                try
-                {
-                    this.actorsService.CreateActor(model);
-                    this.AddNotification("Created successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    this.AddNotification(ex.Message, NotificationType.ERROR);
-                    return this.View(model);
-                }
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(CreateActorBindingModel model)
+        //{
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            this.actorsService.CreateActor(model);
+        //            this.AddNotification("Created successfully", NotificationType.SUCCESS);
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            this.AddNotification(ex.Message, NotificationType.ERROR);
+        //            return this.View(model);
+        //        }
+        //    }
 
-            return this.View(model);
-        }
+        //    return this.View(model);
+        //}
 
-        // GET: Actors/Edit/5
-        public ActionResult Edit(int? id)
-        {
+        //// GET: Actors/Edit/5
+        //public ActionResult Edit(int? id)
+        //{
 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
 
-            try
-            {
-                var actor = this.actorsService.GetActorViewById(id.Value);
-                return this.View(actor);
-            }
-            catch (Exception ex)
-            {
-                return HttpNotFound(ex.Message);
-            }
-        }
+        //    try
+        //    {
+        //        var actor = this.actorsService.GetActorViewById(id.Value);
+        //        return this.View(actor);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HttpNotFound(ex.Message);
+        //    }
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditActorBindingModel model)
-        {
-            if (this.ModelState.IsValid)
-            {
-                try
-                {
-                    this.actorsService.EditActor(model);
-                    this.AddNotification("Edited successfully", NotificationType.SUCCESS);
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    this.AddNotification(ex.Message, NotificationType.ERROR);
-                    return this.View();
-                }
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(EditActorBindingModel model)
+        //{
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            this.actorsService.EditActor(model);
+        //            this.AddNotification("Edited successfully", NotificationType.SUCCESS);
+        //            return RedirectToAction("Index");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            this.AddNotification(ex.Message, NotificationType.ERROR);
+        //            return this.View();
+        //        }
+        //    }
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        // GET: Actors/Delete/5
-        public ActionResult Delete(int? id)
-        {
+        //// GET: Actors/Delete/5
+        //public ActionResult Delete(int? id)
+        //{
 
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
 
-            try
-            {
-                var actor = this.actorsService.GetActorViewById(id.Value);
-                return this.View(actor);
-            }
-            catch (Exception ex)
-            {
-                return HttpNotFound(ex.Message);
-            }
+        //    try
+        //    {
+        //        var actor = this.actorsService.GetActorViewById(id.Value);
+        //        return this.View(actor);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return HttpNotFound(ex.Message);
+        //    }
 
-        }
+        //}
 
-        // POST: Actors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            try
-            {
-                this.actorsService.Delete(id);
-                this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                this.AddNotification(ex.Message, NotificationType.ERROR);
-                return this.View();
-            }
+        //// POST: Actors/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    try
+        //    {
+        //        this.actorsService.Delete(id);
+        //        this.AddNotification("Deleted successfully", NotificationType.SUCCESS);
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        this.AddNotification(ex.Message, NotificationType.ERROR);
+        //        return this.View();
+        //    }
 
-        }
+        //}
     }
 }

@@ -3,18 +3,41 @@
 
 
 
-    <div class="row">
-        <img class="actor-photo col-md-6" src="@Model.Photo" alt="photo" />
-        <div col-md-6>
-            <div><strong>Movies:</strong></div>
-            @foreach (var movie in Model.Movies)
+<div class="row">
+    <img class="actor-photo col-md-6" src="@Model.Photo" alt="photo" />
+    <div col-md-6>
+        <div><strong>Movies:</strong></div>
+        @foreach (var movie in Model.Movies)
             {
-                <div>@Html.ActionLink(movie.Name, "Details", "Movies", new {id = movie.Id}, null)</div>
-            }
-        </div>
+            <div>@Html.ActionLink(movie.Name, "Details", "Movies", new { id = movie.Id }, null)</div>
+        }
     </div>
-    <h2 class="text-center">@Html.DisplayName(Model.Name)</h2>
+</div>
+<h2 class="text-center">@Html.DisplayName(Model.Name)</h2>
+
+@if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Administrator"))
+{
+    if (this.ViewBag.ActionName == "Delete")
+    {
+        <h4 class="text-center"><a href="@Model.IMDBProfile">IMDB Profile &raquo;</a></h4>
+    }
+    else
+    {
+        <div class="row">
+            <h4 class="col-md-5"><a href="@Model.IMDBProfile">IMDB Profile &raquo;</a></h4>
+
+            @Html.ActionLink("Edit", "Edit", "AdminActors", new { Area = "Administration", id = Model.Id }, htmlAttributes: new { @class = "btn btn-info col-md-3", id = "actor-btn" })
+            @Html.ActionLink("Delete", "Delete", "AdminActors", new { Area = "Administration", id = Model.Id }, htmlAttributes: new { @class = "btn btn-info col-md-3" })
+
+        </div>
+    }
+
+}
+else
+{
     <h4 class="text-center"><a href="@Model.IMDBProfile">IMDB Profile &raquo;</a></h4>
+}
+
 
 
 

@@ -47,3 +47,16 @@ textarea {
     padding-left: 5px !important;
     padding-right: 5px !important;
 }
+
+#admin-button {
+    margin-top: 7px;
+    border-color: transparent;
+}
+
+#actor-btn{
+    margin-right: 10px;
+}
+
+#delete-sign {
+    margin-top: 10px;
+}
