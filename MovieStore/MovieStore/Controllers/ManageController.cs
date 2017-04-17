@@ -6,19 +6,24 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels.Manage;
+using MovieStore.Extensions;
 using MovieStore.Models;
+using MovieStore.Services.Contracts;
 
 namespace MovieStore.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IProfileService profileService;
 
-        public ManageController()
+        public ManageController(IProfileService profileService)
         {
+            this.profileService = profileService;
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -239,6 +244,7 @@ namespace MovieStore.Controllers
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 }
+                this.AddNotification("The password was changed successfully", NotificationType.SUCCESS);
                 return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             AddErrors(result);
@@ -321,6 +327,40 @@ namespace MovieStore.Controllers
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
+        }
+
+        [HttpGet]
+        public ActionResult EditProfile()
+        {
+            var model = this.profileService.LoadUserData(this.LoggedInUserId);
+
+            return this.View(model);
+
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditProfile(EditProfileInputModel model)
+        {
+
+            if (this.ModelState.IsValid)
+            {
+                try
+                {
+                    var profile = this.profileService.EditProfile(this.LoggedInUserId, model);
+                    this.AddNotification("User profile was edited successfully", NotificationType.SUCCESS);
+                    return this.View(profile);
+                }
+                catch (Exception ex)
+                {
+                    this.AddNotification(ex.Message, NotificationType.ERROR);
+                    return this.View(model);
+                }
+                
+            }
+
+            return this.View(model);
         }
 
         protected override void Dispose(bool disposing)

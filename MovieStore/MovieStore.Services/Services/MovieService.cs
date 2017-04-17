@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using AutoMapper;
 using MovieStore.Data.Contracts;
 using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels;
@@ -73,7 +74,6 @@ namespace MovieStore.Services.Services
         public MovieViewModel LoadEditMovieData(int id)
         {
             var movie = this.GetMovieViewById(id);
-            //var model = new CreateMovieBindingModel();
             var actors = this.actorsService.GetAllActors().ToList();
             var genres = this.GetAllMovieGenres().ToList();
             var selectedActorsIds = new List<string>();
@@ -229,12 +229,8 @@ namespace MovieStore.Services.Services
 
             var movie = this.GetMovieById(id);
 
-            var rating = new Rating
-            {
-                MovieId = movie.Id,
-                UserId = currentUserId,
-                Stars = model.Stars
-            };
+            var rating = Mapper.Map<Rating>(model);
+            rating.MovieId = movie.Id;
 
             this.Data.Ratings.Add(rating);
 

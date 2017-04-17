@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using MovieStore.Data.Contracts;
 using MovieStore.DTOs.InputModels;
 using MovieStore.DTOs.ViewModels;
@@ -35,6 +36,7 @@ namespace MovieStore.Services.Services
             var comments = movie.Comments.AsQueryable()
                 .OrderByDescending(c => c.CreatedAt)
                 .Select(CommentViewModel.Create);
+
             movieWithComments.Id = movieId;
             movieWithComments.MovieName = movie.Name;
             movieWithComments.Comments = comments;

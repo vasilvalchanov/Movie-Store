@@ -36,11 +36,6 @@ namespace MovieStore.Services.Services
                 .Include(a => a.Movies)
                 .Select(ActorViewModel.Create).ToList();
 
-            //var actors = this.Data.Actors.All()
-            //    .Include(a => a.Movies);
-
-            //var viewModels = Mapper.Map<IEnumerable<ActorViewModel>>(actors);
-
             return actors;
         }
 
@@ -49,10 +44,6 @@ namespace MovieStore.Services.Services
             this.CheckModelForNull(model);
             this.CheckActorForDuplication(model);
             var actor = this.GetActorById(model.Id);
-
-            //actor.Name = model.Name;
-            //actor.Photo = model.Photo;
-            //actor.IMDBProfile = model.IMDBProfile;
 
             Mapper.Map(model, actor);
 

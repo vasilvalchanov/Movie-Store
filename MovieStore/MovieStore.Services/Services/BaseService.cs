@@ -16,7 +16,6 @@ namespace MovieStore.Services.Services
         public BaseService(IMovieStoreData data)
         {
             this.Data = data;
-            this.ConfigureMapper();
         }
 
         public IMovieStoreData Data { get; set; }
@@ -29,17 +28,5 @@ namespace MovieStore.Services.Services
             }
         }
 
-        private void ConfigureMapper()
-        {
-            Mapper.Initialize(config =>
-            {
-                config.CreateMap<Movie, SimpleMovieViewModel>();
-                config.CreateMap<IEnumerable<Movie>, IEnumerable<SimpleMovieViewModel>>();
-                config.CreateMap<Actor, ActorViewModel>();
-                config.CreateMap<IEnumerable<Actor>, IEnumerable<ActorViewModel>>();
-                config.CreateMap<CreateActorBindingModel, Actor>();
-                config.CreateMap<EditActorBindingModel, Actor>();
-            });
-        }
     }
 }

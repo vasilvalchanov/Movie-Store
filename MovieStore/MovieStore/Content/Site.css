@@ -60,3 +60,11 @@ textarea {
 #delete-sign {
     margin-top: 10px;
 }
+
+.jumbotron {
+    margin-top: 60px;
+}
+
+.index-movie-photo {
+    height: 300px;
+}
