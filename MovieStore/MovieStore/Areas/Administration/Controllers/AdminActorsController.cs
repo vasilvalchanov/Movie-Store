@@ -30,6 +30,7 @@ namespace MovieStore.Areas.Administration.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Create(CreateActorBindingModel model)
         {
             if (this.ModelState.IsValid)
@@ -72,6 +73,7 @@ namespace MovieStore.Areas.Administration.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Edit(EditActorBindingModel model)
         {
             if (this.ModelState.IsValid)

@@ -41,6 +41,7 @@ namespace MovieStore.Areas.Administration.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Create(CreateMovieBindingModel model)
         {
 
@@ -84,6 +85,7 @@ namespace MovieStore.Areas.Administration.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
         public ActionResult Edit(EditMovieBindingModel model)
         {
             var movie = this.movieService.LoadEditMovieData(model.Id);

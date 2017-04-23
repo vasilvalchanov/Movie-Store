@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieStore.Models", "MovieS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieStore.Services", "MovieStore.Services\MovieStore.Services.csproj", "{03BCBC7E-D9B5-4B73-BCAA-A0E19AD1FF52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieStore.Tests", "MovieStore.Tests\MovieStore.Tests.csproj", "{13E7F427-0649-482A-9C0D-D4EC455E355B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{03BCBC7E-D9B5-4B73-BCAA-A0E19AD1FF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03BCBC7E-D9B5-4B73-BCAA-A0E19AD1FF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03BCBC7E-D9B5-4B73-BCAA-A0E19AD1FF52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13E7F427-0649-482A-9C0D-D4EC455E355B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13E7F427-0649-482A-9C0D-D4EC455E355B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13E7F427-0649-482A-9C0D-D4EC455E355B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13E7F427-0649-482A-9C0D-D4EC455E355B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
