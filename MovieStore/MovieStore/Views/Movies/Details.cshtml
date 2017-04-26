@@ -55,7 +55,7 @@
                 @{
                     if (Model.Rating != null)
                     {
-                        @: @Model.Rating.Value
+                        @: @string.Format("{0:f2}", Model.Rating.Value)
                     }
                     else
                     {

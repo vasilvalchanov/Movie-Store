@@ -1,8 +1,6 @@
 ﻿@model MovieStore.DTOs.ViewModels.MovieViewModel
 
 
-@*<div class="col-md-6 movie-container">*@
-
     <div class="row">
         <img class="actor-photo col-md-4" src="@Model.Poster" alt="poster"/>
         <div class="col-md-8">
@@ -19,7 +17,7 @@
                 @{
                     if (Model.Rating != null)
                     {
-                        @: @Model.Rating.Value
+                        @: @string.Format("{0:f2}", Model.Rating.Value)
                     }
                     else
                     {
@@ -64,6 +62,4 @@
     }
     <h2 class="text-center text-danger">@Html.DisplayName(Model.Name)</h2>
     
-
-@*</div>*@
 

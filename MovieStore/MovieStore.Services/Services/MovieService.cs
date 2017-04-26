@@ -228,9 +228,9 @@ namespace MovieStore.Services.Services
             this.CheckModelForNull(model);
 
             var movie = this.GetMovieById(id);
-
+            model.MovieId = movie.Id;
+            model.UserId = currentUserId;
             var rating = Mapper.Map<Rating>(model);
-            rating.MovieId = movie.Id;
 
             this.Data.Ratings.Add(rating);
 
@@ -263,6 +263,7 @@ namespace MovieStore.Services.Services
         {
             var movie = this.Data.Movies
                 .All()
+                .Include(m => m.Ratings)
                 .FirstOrDefault(m => m.Id == id);
 
             if (movie == null)

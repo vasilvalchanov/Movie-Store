@@ -14,5 +14,9 @@ namespace MovieStore.DTOs.InputModels
         [Required]
         [Range(1, 10)]
         public int Stars { get; set; }
+
+        public string UserId { get; set; }
+
+        public int MovieId { get; set; }
     }
 }
