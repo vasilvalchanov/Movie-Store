@@ -16,6 +16,8 @@ using MovieStore.Services.Services;
 using TestStack.FluentMVCTesting;
 using AutoMapper;
 using MovieStore.Models.Models;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace MovieStore.Tests.ControllersTests
 {
@@ -315,6 +317,98 @@ namespace MovieStore.Tests.ControllersTests
                     && a.Name == "Edited Name"
                     && a.Photo == "Photo"
                     && a.IMDBProfile == "Profile");
+
+        }
+
+        [TestMethod]
+        public void DeleteActor_AdminUser_ShouldPass()
+        {
+            var mock = new Mock<ControllerContext>();
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "AdminActorsController");
+            routeData.Values.Add("Action", "Delete");
+            mock.SetupGet(m => m.RouteData).Returns(routeData);
+
+            this.controller.ControllerContext = mock.Object;
+
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+
+            this.CheckUserCredentials(fakeUser);
+
+            this.controller.WithCallTo(c => c.Delete(1)).ShouldRenderDefaultView();
+        }
+
+        [TestMethod]
+        public void DeleteActor_AdminUser_InvalidActorId_ShouldReturnBadRequest()
+        {
+
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+
+            this.CheckUserCredentials(fakeUser);
+
+            this.controller.WithCallTo(c => c.Delete(null)).ShouldGiveHttpStatus(HttpStatusCode.BadRequest);
+        }
+
+        [TestMethod]
+        public void DeleteActor_AdminUser_ShouldReturnCorrectModel()
+        {
+            var mock = new Mock<ControllerContext>();
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "AdminActorsController");
+            routeData.Values.Add("Action", "Delete");
+            mock.SetupGet(m => m.RouteData).Returns(routeData);
+
+            this.controller.ControllerContext = mock.Object;
+
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+            var fakeActor = this.mocks.ActorRepositoryMock.Object.All().FirstOrDefault(a => a.Id == 1);
+
+            this.CheckUserCredentials(fakeUser);
+
+            var actorView = this.mockContext.Object.Actors.All().Where(a => a.Id == 1)
+                .Select(ActorViewModel.Create).FirstOrDefault();
+
+            this.controller.WithCallTo(c => c.Delete(1)).ShouldRenderDefaultView()
+                .WithModel<ActorViewModel>(a =>
+                    a.Id == actorView.Id
+                    && a.Name == actorView.Name
+                    && a.Photo == actorView.Photo
+                    && a.IMDBProfile == actorView.IMDBProfile);
+        }
+
+        [TestMethod]
+        public void DeleteActor_NotAdminUser_ShouldNotPass()
+        {
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+            var willTheTestFail = false;
+            var message = "Cannot perform test - no users available or current user is not Administrator";
+
+            if (fakeUser == null || !fakeUser.Roles.Any(r => r.RoleId == "2"))
+            {
+                willTheTestFail = true;
+            }
+
+            Assert.IsTrue(willTheTestFail, message);
+        }
+
+        [TestMethod]
+        public void DeleteConfirmedActor_AdminUser__ShouldRedirectAfterDeleting()
+        {
+
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+
+            this.CheckUserCredentials(fakeUser);
+
+            this.controller.WithCallTo(c => c.DeleteConfirmed(1)).ShouldRedirectToRoute("");
+        }
+
+        [TestMethod]
+        public void DeleteConfirmedActor_AdminUser__DeletingFailed_ShouldReturnDefaultView()
+        {
+            var fakeUser = this.mocks.UserRepositoryMock.Object.All().FirstOrDefault(u => u.Id == "12345");
+
+            this.CheckUserCredentials(fakeUser);
+            this.controller.WithCallTo(c => c.DeleteConfirmed(-1)).ShouldRenderDefaultView();
 
         }
 

@@ -181,6 +181,13 @@ namespace MovieStore.Tests
                     var actor = fakeActors.FirstOrDefault(a => a.Id == id);
                     return actor;
                 });
+
+            this.ActorRepositoryMock.Setup(r => r.Delete(It.IsAny<Actor>())).Callback(
+                (Actor actor) =>
+                {
+                    fakeActors.RemoveAt(0);
+                    
+                }); 
         }
 
         private void SetupFakeComments()
