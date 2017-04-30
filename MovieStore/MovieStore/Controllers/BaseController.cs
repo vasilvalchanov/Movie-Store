@@ -14,8 +14,8 @@ namespace MovieStore.Controllers
     public class BaseController : Controller
     {
 
-        protected string LoggedInUserId => this.User.Identity.GetUserId();
-        protected string LoggedInUserName => this.User.Identity.GetUserName();
-        protected bool IsLoggedInUserAdmin => this.User.IsInRole("Administrator");
+        protected virtual string LoggedInUserId => this.User.Identity.GetUserId();
+        protected virtual string LoggedInUserName => this.User.Identity.GetUserName();
+        protected virtual bool IsLoggedInUserAdmin => this.User.IsInRole("Administrator");
     }
 }

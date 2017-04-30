@@ -139,7 +139,7 @@ namespace MovieStore.Tests
                 },
                 new Movie()
                 {
-                    Id = 1,
+                    Id = 3,
                     Name = "Test Movie 1",
                     Country = "Test Country 1",
                     Description = "Test Test Test Test Test Test Test",
@@ -150,6 +150,12 @@ namespace MovieStore.Tests
                     Genres = fakeGenres
                 }
 
+            };
+
+            fakeMovies[0].Comments = new List<Comment>()
+            {
+                new Comment() {Id = 1, Content = "Test Content 1", CreatedAt = new DateTime(2017, 05, 05), Author = new User() { Id = "123", UserName = "stamat" }, AuthorId = "123"},
+                new Comment() {Id = 2, Content = "Test Content 2", CreatedAt = new DateTime(2017, 05, 06), Author = new User() { Id = "123", UserName = "stamat" }, AuthorId = "123"}
             };
 
             this.MovieRepositoryMock = new Mock<IRepository<Movie>>();
@@ -210,6 +216,8 @@ namespace MovieStore.Tests
                     var comment = fakeComments.FirstOrDefault(c => c.Id == id);
                     return comment;
                 });
+
+            
         }
     }
 }

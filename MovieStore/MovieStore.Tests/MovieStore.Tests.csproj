@@ -114,6 +114,8 @@
   <ItemGroup>
     <Compile Include="ControllersTests\ActorsControllerTests.cs" />
     <Compile Include="ControllersTests\AdminActorsControllerTests.cs" />
+    <Compile Include="ControllersTests\CommentsControllerTests.cs" />
+    <Compile Include="FakeCommentsController.cs" />
     <Compile Include="MockContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
